@@ -1,5 +1,7 @@
 # Storyflo MCP Server
 
+[![storyflo-mcp MCP server](https://glama.ai/mcp/servers/Alisammour/storyflo-mcp/badges/card.svg)](https://glama.ai/mcp/servers/Alisammour/storyflo-mcp)
+
 Official Model Context Protocol server for [**Storyflo**](https://storyflo.com) — a curated audio-news platform that narrates trending articles + listener-forwarded newsletters and exposes them as a callable surface for any LLM agent.
 
 This repository is a **discovery + install reference**. The Storyflo platform itself is proprietary; this README is what agents and humans need to integrate.
