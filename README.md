@@ -5,7 +5,41 @@
 
 Official Model Context Protocol server for [**Storyflo**](https://storyflo.com) — a curated audio-news platform that narrates trending articles + listener-forwarded newsletters and exposes them as a callable surface for any LLM agent.
 
-This repository is a **discovery + install reference**. The Storyflo platform itself is proprietary; this README is what agents and humans need to integrate.
+This repository contains a zero-dependency **stdio bridge** (`src/index.js`) that relays MCP JSON-RPC between a local stdio client and the hosted streamable-http endpoint, plus discovery + install references. The Storyflo platform itself is proprietary; agent integration through the public API is the supported surface.
+
+## Run the stdio bridge
+
+```bash
+npx storyflo-mcp            # or: node src/index.js
+```
+
+Or via Docker:
+
+```bash
+docker build -t storyflo-mcp .
+docker run -i --rm storyflo-mcp
+```
+
+Environment variables:
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `STORYFLO_MCP_URL` | `https://api.storyflo.com/mcp/v1` | Upstream MCP endpoint |
+| `STORYFLO_TOKEN` | _(unset)_ | OAuth bearer for `tools/call`; discovery (`initialize`, `ping`, `tools/list`, `resources/list`) works anonymously |
+
+Claude Desktop / any stdio-only MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "storyflo": {
+      "command": "npx",
+      "args": ["-y", "storyflo-mcp"],
+      "env": { "STORYFLO_TOKEN": "<optional bearer>" }
+    }
+  }
+}
+```
 
 ## What you can do
 
