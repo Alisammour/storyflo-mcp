@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Alisammour/storyflo-mcp",
+  "description": "Curated audio-news: search articles, narrated audio, vertical briefings, topic subscriptions.",
+  "repository": {
+    "url": "https://github.com/Alisammour/storyflo-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://storyflo.com",
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.storyflo.com/mcp/v1"
+    }
+  ]
+}
