@@ -185,26 +185,40 @@ Aggregate the top-N articles across one or more verticals for a window (24h / 7d
 ---
 
 ### `get_market_linked_stories` · free
-Top Storyflo stories that topically correlate with actively traded **event contracts on Kalshi** — a CFTC-regulated designated contract market. Each item pairs a story with the matched contract's market-implied probability and 24h price move, showing which news themes forecast markets are repricing right now.
+Storyflo stories that match an actively traded **event contract on Kalshi** — a CFTC-regulated designated contract market. Each item carries qualitative **signal tags** plus a **link-out to Kalshi's own page** where the live market data lives.
 
-**Use when** the agent needs to answer "what's moving on the World Cup", "which stories are markets reacting to today", or "is this news already priced in?" — the actionability layer rankers + summaries can't fake.
+This is an **editorial sourcing surface**, not market-data redistribution. Storyflo never returns raw prices, market-implied probabilities, volumes, or open interest in this payload. The agent or user follows the linkout to see live numbers on Kalshi.
+
+**Use when** the agent needs to know which Storyflo stories are about news themes that have an actively traded event contract — e.g. World Cup matches, political mention contracts, corporate events. Same shape as a newsroom citing CME futures: market activity informs which stories are worth surfacing.
 
 **Parameters**
 | name | type | required | description |
 |---|---|---|---|
 | `vertical` | string | no | Filter by story vertical (e.g. `news`, `finance`, `tech`, `crypto`). |
-| `category` | string | no | Filter by Kalshi event category (e.g. `Politics`, `Economics`, `Companies`, `Science and Technology`). |
+| `category` | string | no | Filter by Kalshi event category (e.g. `Politics`, `Economics`, `Companies`, `Science and Technology`, `Sports`). |
+| `signal` | enum | no | One of `active`, `high_velocity`, `genuine_uncertainty`. `high_velocity` = the matched market is repricing meaningfully in the last 24h; `genuine_uncertainty` = the market sits in the 40–60% band where it itself is uncertain. |
 | `limit` | int | no | Max items (default 10, capped 50). |
-| `min_move` | number | no | Only items whose matched contract moved at least this much (probability points 0–1) in 24h. Default 0. |
 
-**Returns** — array of `{ story: { slug, title, vertical, published_at }, event_contract: { ticker, title, category, implied_probability, price_move_24h, volume_24h, open_interest }, match: { score, shared_terms } }`, plus top-level `attribution` and `disclaimer` strings on every payload.
+**Returns** — array of:
+```json
+{
+  "story": { "slug", "title", "vertical", "published_at" },
+  "matched_market": { "title", "category", "url" },
+  "signal_tags": ["active", "high_velocity"?, "genuine_uncertainty"?],
+  "match": { "score", "shared_terms" }
+}
+```
+plus top-level `attribution` and `disclaimer` strings on every payload.
+
+The `matched_market.url` links to Kalshi's own events page so the user / agent sees live market data on the source. Storyflo does not redistribute that data.
 
 **Compliance posture** (counsel-reviewed; regression-tested in CI):
-- Vocabulary locked to "event contracts" / "market-implied probability" / "price move" — never bets, odds, picks, wagers
+- Vocabulary locked: never bets, odds, picks, or wagers — anywhere on the surface
 - Attribution on every payload: "Market data: Kalshi, a CFTC-regulated designated contract market"
 - Disclaimer on every payload: market-implied probabilities are exchange prices, not Storyflo forecasts and not investment advice; story-to-market links indicate topical correlation, not causation; informational use only
 - Liquidity floor (vol24h ≥ 100 OR OI ≥ 1000) excludes thin markets that could be manipulated into the feed
-- Near-resolved contracts (implied probability outside 3–97%) excluded — keeps forward-looking signal only
+- Near-resolved markets (implied probability outside 3–97%) excluded — keeps forward-looking signal only
+- **Input-not-output frame**: raw prices, probabilities, volumes, and open interest are computed internally for ranking but never exposed in the public payload. The linkout is the user's path to live data on Kalshi's own surface.
 
 ## Authentication
 

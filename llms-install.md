@@ -28,7 +28,7 @@ The first time the user invokes a Storyflo tool, the client will prompt for OAut
 - `subscribe_topic` — mint or update the listener's personal podcast RSS feed
 - `list_subscriptions` — list feeds this agent has minted on the human's behalf
 - `digest` — aggregate top-N articles across verticals (heaviest read-only action)
-- `get_market_linked_stories` — top stories topically correlated with actively traded Kalshi event contracts (a CFTC-regulated designated contract market). Returns market-implied probability + 24h price move. Informational market data only — not investment advice.
+- `get_market_linked_stories` — Storyflo stories matched to actively traded Kalshi event contracts (a CFTC-regulated designated contract market). Each item carries qualitative signal tags (`active`, `high_velocity`, `genuine_uncertainty`) plus a link-out to Kalshi's own page where the live market data lives. Editorial sourcing surface — Storyflo never returns raw prices, probabilities, volumes, or open interest. Informational use only; not investment advice.
 
 **Premium** (metered via x402 over USDC on Base mainnet):
 - `get_vertical_briefing` — stitched audio briefing of top-25 trending articles in a vertical from the last 24h
