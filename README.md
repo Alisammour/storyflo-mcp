@@ -250,6 +250,38 @@ npx -y @smithery/cli install storyflo
 The Storyflo brand mark for client UIs:
 [`https://storyflo.com/icon-512.png`](https://storyflo.com/icon-512.png)
 
+## Related MCP servers
+
+If you ship an agent that uses storyflo, you might also want the following — same x402-over-Base monetization rail, similar agent-facing posture, or natural complements in the news / finance / audio category space.
+
+### Same payment rail (x402 over USDC on Base)
+
+- [forgemeshlabs/coinopai-mcp](https://github.com/forgemeshlabs/coinopai-mcp) — paid crypto intelligence (trade decisions, audit against real prices, signal history) over USDC micropayments on Base.
+- [8randonpickart5/alderpost-mcp](https://github.com/8randonpickart5/alderpost-mcp) — eight bundled intelligence endpoints (security, company, threat, compliance, sales, sports, property, health) via x402 on Base.
+
+### Financial / market-data sourcing
+
+- [Yahoo Finance MCP server](https://glama.ai/mcp/servers?q=yfinance) — real-time equity quotes for agents that need security-level data alongside storyflo's market-aware news signal.
+
+### News + article sourcing
+
+- [angheljf/nyt](https://github.com/angheljf/nyt) — NY Times article search.
+- [AceDataCloud/MCPSerp](https://github.com/AceDataCloud/SerpMCP) — Google SERP (web, images, news, maps) search.
+- [andybrandt/mcp-simple-arxiv](https://github.com/andybrandt/mcp-simple-arxiv) — search + read arXiv papers.
+- [Aas-ee/open-webSearch](https://github.com/Aas-ee/open-webSearch) — free multi-engine web search.
+
+### Multimedia / audio adjacencies
+
+- [AceDataCloud/MCPSuno](https://github.com/AceDataCloud/SunoMCP) — Suno AI music generation + vocal extraction.
+- [bogdan01m/zapcap-mcp-server](https://github.com/bogdan01m/zapcap-mcp-server) — video caption and B-roll generation.
+
+### Meta-MCP / aggregators
+
+- [1mcp/agent](https://github.com/1mcp-app/agent) — unified MCP server that aggregates multiple MCP servers into one.
+- [tadas-github/a2asearch-mcp](https://github.com/tadas-github/a2asearch-mcp) — discover 4,800+ MCP servers, agents, and CLI tools.
+
+> If you maintain an MCP server that pairs naturally with storyflo and isn't listed, please [open a PR](https://github.com/Alisammour/storyflo-mcp/pulls) or comment on an issue. We curate this list quarterly.
+
 ## Support
 
 - Developer questions: [api@storyflo.com](mailto:api@storyflo.com)
