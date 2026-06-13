@@ -136,12 +136,20 @@ Resolve the playable audio URL for an article without fetching the body. Use whe
 ---
 
 ### `subscribe_topic` · free
-Mint or update the listener's personal podcast feed for a set of verticals. **Persistent side effect**: a feed row is created or updated server-side and the listener gets an RSS URL to paste into Spotify / Apple Podcasts / Pocket Casts. Subsequent calls overwrite the previous vertical selection on the same listener.
+Mint or update the human's personal Storyflo podcast feed. Pass 1–6 vertical slugs and the server creates a private RSS feed scoped to those verticals — or updates the existing feed in place if the listener already has one. Returns the RSS URL the listener can paste into Spotify, Apple Podcasts, Pocket Casts, or any podcast client.
+
+**Behavior**
+- **Persistent server-side side-effect** — a `ListenerSubscription` row is created or updated. The returned RSS URL stays stable across calls for the same listener (no re-pasting needed).
+- **Idempotent on identical input** — calling twice with the same verticals leaves state unchanged.
+- **REPLACES on different input** — calling with a different verticals set OVERWRITES the previous selection rather than adding to it. Use this to switch a listener's feed; do NOT call to add verticals incrementally. For additive behavior, read the current set via `list_subscriptions` first and pass the union.
+- **Single feed per listener** — call `list_subscriptions` first to avoid clobbering an existing feed the listener explicitly chose.
+
+**Use when** the agent has been asked to set up audio news for the human across a defined set of topics. Do NOT use to FETCH articles or audio — that's `search_articles` + `get_audio_url`.
 
 **Parameters**
 | name | type | required | description |
 |---|---|---|---|
-| `verticals` | array<enum> | **yes** | 1–6 of `tech`, `finance`, `science`, `media`, `sports`, `culture`. |
+| `verticals` | array&lt;enum&gt; | **yes** | 1–6 unique slugs from `tech`, `finance`, `science`, `media`, `sports`, `culture`. Replaces (does not append to) the listener's current selection. |
 
 **Returns** — `{ feed_url, verticals, listener_token }`.
 
