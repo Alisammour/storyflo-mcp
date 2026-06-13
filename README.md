@@ -92,7 +92,7 @@ https://api.storyflo.com/mcp/v1
 
 ## Tools
 
-Storyflo exposes **7 tools**. Free-tier tools require OAuth only. Premium tools settle per-call via x402 over USDC on Base mainnet — the agent's payment shim runs before the tool is invoked.
+Storyflo exposes **8 tools**. Free-tier tools require OAuth only. The single premium tool settles per-call via x402 over USDC on Base mainnet — the agent's payment shim runs before the tool is invoked.
 
 The live tool manifest (with full JSON Schema for every parameter) is at
 [`/v1/agents/openai-tools.json`](https://api.storyflo.com/v1/agents/openai-tools.json) — the source of truth Glama, OpenAI, and Anthropic introspect.
@@ -135,7 +135,7 @@ Resolve the playable audio URL for an article without fetching the body. Use whe
 
 ---
 
-### `subscribe_topic` · paid (x402)
+### `subscribe_topic` · free
 Mint or update the listener's personal podcast feed for a set of verticals. **Persistent side effect**: a feed row is created or updated server-side and the listener gets an RSS URL to paste into Spotify / Apple Podcasts / Pocket Casts. Subsequent calls overwrite the previous vertical selection on the same listener.
 
 **Parameters**
@@ -144,8 +144,6 @@ Mint or update the listener's personal podcast feed for a set of verticals. **Pe
 | `verticals` | array<enum> | **yes** | 1–6 of `tech`, `finance`, `science`, `media`, `sports`, `culture`. |
 
 **Returns** — `{ feed_url, verticals, listener_token }`.
-
-**Cost** — single x402 charge (~$0.005 USDC), no per-item cost.
 
 ---
 
@@ -172,7 +170,7 @@ Fetch a stitched audio briefing of the top-25 trending articles in a single vert
 
 ---
 
-### `digest` · paid (x402, heaviest)
+### `digest` · free (heaviest)
 Aggregate the top-N articles across one or more verticals for a window (24h / 7d / 30d). The heaviest action — counts most against per-agent rate limit. Use for "read me today's tech + finance news" prompts where the agent wants a curated cross-vertical roll-up rather than a single vertical's briefing.
 
 **Parameters**
@@ -184,7 +182,29 @@ Aggregate the top-N articles across one or more verticals for a window (24h / 7d
 
 **Returns** — `{ window, verticals, items: [{ slug, title, vertical, audio_url, snippet }] }`.
 
-**Cost** — single x402 charge; counts as one heavy action against the agent's rate limit.
+---
+
+### `get_market_linked_stories` · free
+Top Storyflo stories that topically correlate with actively traded **event contracts on Kalshi** — a CFTC-regulated designated contract market. Each item pairs a story with the matched contract's market-implied probability and 24h price move, showing which news themes forecast markets are repricing right now.
+
+**Use when** the agent needs to answer "what's moving on the World Cup", "which stories are markets reacting to today", or "is this news already priced in?" — the actionability layer rankers + summaries can't fake.
+
+**Parameters**
+| name | type | required | description |
+|---|---|---|---|
+| `vertical` | string | no | Filter by story vertical (e.g. `news`, `finance`, `tech`, `crypto`). |
+| `category` | string | no | Filter by Kalshi event category (e.g. `Politics`, `Economics`, `Companies`, `Science and Technology`). |
+| `limit` | int | no | Max items (default 10, capped 50). |
+| `min_move` | number | no | Only items whose matched contract moved at least this much (probability points 0–1) in 24h. Default 0. |
+
+**Returns** — array of `{ story: { slug, title, vertical, published_at }, event_contract: { ticker, title, category, implied_probability, price_move_24h, volume_24h, open_interest }, match: { score, shared_terms } }`, plus top-level `attribution` and `disclaimer` strings on every payload.
+
+**Compliance posture** (counsel-reviewed; regression-tested in CI):
+- Vocabulary locked to "event contracts" / "market-implied probability" / "price move" — never bets, odds, picks, wagers
+- Attribution on every payload: "Market data: Kalshi, a CFTC-regulated designated contract market"
+- Disclaimer on every payload: market-implied probabilities are exchange prices, not Storyflo forecasts and not investment advice; story-to-market links indicate topical correlation, not causation; informational use only
+- Liquidity floor (vol24h ≥ 100 OR OI ≥ 1000) excludes thin markets that could be manipulated into the feed
+- Near-resolved contracts (implied probability outside 3–97%) excluded — keeps forward-looking signal only
 
 ## Authentication
 
@@ -192,7 +212,7 @@ OAuth 2.1 + PKCE. Public clients (Claude/ChatGPT/Cursor's MCP connectors) auto-r
 
 ## x402 micropayments
 
-Premium tools are metered via **x402 over USDC on Base mainnet**. Agents pay per call, no upfront contract. Free-tier tools (`search_articles`, `list_topics`, `get_daily_briefing`) require no payment.
+The premium tool (`get_vertical_briefing`) is metered via **x402 over USDC on Base mainnet**. Agents pay per call, no upfront contract. All other tools (`search_articles`, `get_article`, `get_audio_url`, `subscribe_topic`, `list_subscriptions`, `digest`, `get_market_linked_stories`) require no payment beyond OAuth.
 
 70/20/10 revenue split: **70% to the publisher**, **20% to the recommending agent**, **10% to Storyflo**. On-chain and deterministic.
 
