@@ -19,17 +19,19 @@ Add to your MCP client's config:
 
 The first time the user invokes a Storyflo tool, the client will prompt for OAuth consent. Authentication happens via the user's browser at `https://storyflo.com/oauth/authorize` — no API keys or shared secrets to manage.
 
-## Free vs paid tools
+## Tools (8 total)
 
-Free tools are immediately available after consent:
-- `search_articles`
-- `list_topics`
-- `get_daily_briefing`
-- `get_article`
+**Free** (no payment beyond OAuth):
+- `search_articles` — search the curated article corpus by vertical
+- `get_article` — fetch the full record + body_text + audio_url
+- `get_audio_url` — resolve the playable audio URL for hand-off
+- `subscribe_topic` — mint or update the listener's personal podcast RSS feed
+- `list_subscriptions` — list feeds this agent has minted on the human's behalf
+- `digest` — aggregate top-N articles across verticals (heaviest read-only action)
+- `get_market_linked_stories` — top stories topically correlated with actively traded Kalshi event contracts (a CFTC-regulated designated contract market). Returns market-implied probability + 24h price move. Informational market data only — not investment advice.
 
-Paid tools (metered via x402 over USDC on Base mainnet):
-- `get_premium_briefing` — $0.005/min for stitched on-demand briefings
-- `digest` — $0.001/article aggregation
+**Premium** (metered via x402 over USDC on Base mainnet):
+- `get_vertical_briefing` — stitched audio briefing of top-25 trending articles in a vertical from the last 24h
 
 Agents that don't have a wallet wired can still call free tools without paying. Paid calls return a 402 with the on-chain price; the agent's x402 client handles settlement.
 
