@@ -1,0 +1,62 @@
+name: npm publish
+
+# Publishes storyflo-mcp to the public npm registry using the
+# repo-scoped NPM_TOKEN secret. Manual-dispatch only — version bumps
+# are deliberate, not automatic on README edits.
+#
+# Usage:
+#   gh workflow run npm-publish.yml -R Alisammour/storyflo-mcp
+#
+# The job prints `npm whoami` BEFORE publishing so the audit log
+# captures which npm identity owns the release.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Set to 'true' for npm pack dry-run only (no publish)"
+        required: false
+        default: "false"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Verify package syntax
+        run: node --check src/index.js
+
+      - name: Print identity
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "npm whoami:"
+          npm whoami
+          echo "Package state:"
+          node -e "const p = require('./package.json'); console.log(p.name, p.version)"
+
+      - name: npm pack dry-run
+        run: npm pack --dry-run
+
+      - name: npm publish
+        if: ${{ inputs.dry_run != 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --provenance
+
+      - name: Verify publish
+        if: ${{ inputs.dry_run != 'true' }}
+        run: |
+          sleep 10
+          PKG_VERSION=$(node -e "console.log(require('./package.json').version)")
+          curl -fsSL "https://registry.npmjs.org/storyflo-mcp/${PKG_VERSION}" | jq -e '.name == "storyflo-mcp"'
+          echo "Published storyflo-mcp@${PKG_VERSION}"
