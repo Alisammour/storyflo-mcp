@@ -1,0 +1,26 @@
+{
+  "$schema": "https://open-plugins.com/schemas/mcp.json",
+  "mcpServers": {
+    "storyflo": {
+      "command": "npx",
+      "args": ["-y", "storyflo-mcp"],
+      "env": {
+        "STORYFLO_TOKEN": "${STORYFLO_TOKEN}"
+      }
+    },
+    "storyflo-http": {
+      "type": "http",
+      "url": "https://api.storyflo.com/mcp/v1",
+      "headers": {
+        "Authorization": "Bearer ${STORYFLO_TOKEN}"
+      }
+    },
+    "storyflo-sse": {
+      "type": "sse",
+      "url": "https://api.storyflo.com/v1/mcp/sse",
+      "headers": {
+        "Authorization": "Bearer ${STORYFLO_TOKEN}"
+      }
+    }
+  }
+}
