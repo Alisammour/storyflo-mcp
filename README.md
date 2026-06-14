@@ -5,7 +5,36 @@
 
 Official Model Context Protocol server for [**Storyflo**](https://storyflo.com) — a curated audio-news platform that narrates trending articles + listener-forwarded newsletters and exposes them as a callable surface for any LLM agent.
 
-This repository contains a zero-dependency **stdio bridge** (`src/index.js`) that relays MCP JSON-RPC between a local stdio client and the hosted streamable-http endpoint, plus discovery + install references. The Storyflo platform itself is proprietary; agent integration through the public API is the supported surface.
+Three transports, same eight tools, same OAuth flow:
+
+- **Stdio bridge** — `npx -y storyflo-mcp`, relays JSON-RPC to the hosted endpoint. Best for Claude Desktop and other stdio-only clients.
+- **Streamable HTTP** — `https://api.storyflo.com/mcp/v1`. Best for Cursor and hosts that prefer a hosted URL.
+- **HTTP + SSE** — `https://api.storyflo.com/v1/mcp/sse`. Best for ChatGPT Apps, the OpenAI Apps SDK, and the VS Code MCP preview.
+
+This repository contains the zero-dependency stdio bridge (`src/index.js`), an `.mcp.json` discovery file that lists all three transports for Cursor's auto-detector, plus discovery + install references. The Storyflo platform itself is proprietary; agent integration through the public API is the supported surface.
+
+## Hosted HTTP/SSE — paste-and-go
+
+No install required. Pick whichever URL your client supports:
+
+```json
+{
+  "mcpServers": {
+    "storyflo-http": {
+      "type": "http",
+      "url": "https://api.storyflo.com/mcp/v1"
+    },
+    "storyflo-sse": {
+      "type": "sse",
+      "url": "https://api.storyflo.com/v1/mcp/sse"
+    }
+  }
+}
+```
+
+OAuth 2.1 + PKCE with Dynamic Client Registration — the first `tools/call` prompts the user for consent in the browser; discovery (`initialize`, `tools/list`) works anonymously so the picker populates before sign-in.
+
+See the full developer docs at [storyflo.com/developers](https://storyflo.com/developers).
 
 ## Run the stdio bridge
 
@@ -53,7 +82,8 @@ Claude Desktop / any stdio-only MCP client config:
 
 | Surface | URL |
 |---|---|
-| MCP transport | `https://api.storyflo.com/mcp/v1` |
+| MCP transport (streamable-http) | `https://api.storyflo.com/mcp/v1` |
+| MCP transport (HTTP + SSE) | `https://api.storyflo.com/v1/mcp/sse` |
 | Discovery manifest | `https://api.storyflo.com/.well-known/mcp.json` |
 | OAuth (RFC 8414) | `https://api.storyflo.com/.well-known/oauth-authorization-server` |
 | OpenAI tool spec | `https://api.storyflo.com/v1/agents/openai-tools.json` |

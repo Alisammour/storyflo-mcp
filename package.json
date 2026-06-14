@@ -1,14 +1,16 @@
 {
   "name": "storyflo-mcp",
-  "version": "1.0.0",
-  "description": "MCP stdio bridge for Storyflo — curated audio-news: search articles, fetch narrated audio, subscribe topic feeds.",
+  "version": "1.1.0",
+  "description": "MCP server for Storyflo — curated audio-news. Stdio bridge plus hosted streamable-http and HTTP/SSE transports at api.storyflo.com.",
   "type": "module",
   "main": "./src/index.js",
   "bin": {
     "storyflo-mcp": "./src/index.js"
   },
   "files": [
-    "src"
+    "src",
+    ".mcp.json",
+    "server.json"
   ],
   "scripts": {
     "start": "node src/index.js",
@@ -30,6 +32,13 @@
     "news",
     "audio",
     "podcast",
-    "storyflo"
+    "storyflo",
+    "http",
+    "sse",
+    "streamable-http",
+    "stdio",
+    "kalshi",
+    "polymarket",
+    "x402"
   ]
 }
