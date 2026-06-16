@@ -1,7 +1,7 @@
 {
   "name": "storyflo-mcp",
-  "version": "1.0.0",
-  "description": "MCP stdio bridge for Storyflo — curated audio-news: search articles, fetch narrated audio, subscribe topic feeds.",
+  "version": "1.1.0",
+  "description": "MCP stdio bridge for Storyflo \u2014 curated audio-news: search articles, fetch narrated audio, subscribe topic feeds.",
   "type": "module",
   "main": "./src/index.js",
   "bin": {
