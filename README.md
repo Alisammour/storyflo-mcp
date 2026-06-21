@@ -92,10 +92,38 @@ https://api.storyflo.com/mcp/v1
 
 ## Tools
 
-Storyflo exposes **8 tools**. Free-tier tools require OAuth only. The single premium tool settles per-call via x402 over USDC on Base mainnet — the agent's payment shim runs before the tool is invoked.
+Storyflo exposes **13 tools** across three auth tiers:
+
+- **Public (no auth, no OAuth flow needed)** — the 4 `*_declassified*` tools below. Designed so any LLM agent can browse + recommend the Declassified library from a fresh client install without an OAuth handshake.
+- **OAuth free tier** — `search_articles`, `get_article`, `get_audio_url`, `subscribe_topic`, `list_subscriptions`, `digest`, `get_market_linked_stories`, `get_crypto_market_link`.
+- **Premium (x402 over USDC on Base mainnet)** — `get_vertical_briefing`.
 
 The live tool manifest (with full JSON Schema for every parameter) is at
 [`/v1/agents/openai-tools.json`](https://api.storyflo.com/v1/agents/openai-tools.json) — the source of truth Glama, OpenAI, and Anthropic introspect.
+
+### Declassified library · public · no auth (NEW, 2026-06-20)
+
+The Declassified library is Storyflo's narrated archive of publicly-released government documents from FBI, CIA, NSA, NASA, DOJ, AARO, war.gov, and other agencies. Every case has a narrated audio version, a transcript excerpt, and a source-document link. The 4 tools below traverse the same archive that backs the [`/declassified`](https://storyflo.com/declassified) FE shelf and the public [Declassified RSS feed](https://api.storyflo.com/v1/podcasts/storyflo-declassified.xml).
+
+#### `search_declassified` · public
+Substring search across case title + synopsis. Returns `{slug, title, dek, episode_date, duration_sec, agency, category, era, audio_url}` per match.
+
+**Parameters**: `query` (string, required), `limit` (int, 1-50, default 10).
+
+#### `get_declassified_case` · public
+Full case record by slug. Returns `{slug, title, dek, summary, transcript_excerpt, episode_date, duration_sec, agency, category, era, cover_url, audio_url, source_doc_url, related_cases:[{slug, title}]}`.
+
+**Parameters**: `slug` (string, required).
+
+#### `digest_declassified` · public
+Most-recently-published cases over a rolling window. Returns the same card shape as `search_declassified`.
+
+**Parameters**: `window` (`today` | `week` (default) | `month`), `limit` (int, 1-50, default 10).
+
+#### `subscribe_declassified_topic` · public
+Resolves a podcast-feed URL the user can paste into Apple Podcasts, Overcast, Pocket Casts, or Spotify to receive every new Declassified case automatically. Returns `{topic, rss_feed_url, archive_url, episodes_url, matched_so_far, note}`. **Read-only by design**: no DB row is written, no email is stored, the RSS feed IS the subscription.
+
+**Parameters**: `topic` (string, required), `email` (string, optional — informational only, never stored).
 
 ### `search_articles` · free
 Search Storyflo's curated article corpus by query and/or vertical. Use this when the agent needs to find articles matching a topic before deciding which one to read or play.
