@@ -1,7 +1,7 @@
 {
   "name": "storyflo-mcp",
-  "version": "1.1.0",
-  "description": "MCP stdio bridge for Storyflo \u2014 curated audio-news: search articles, fetch narrated audio, subscribe topic feeds.",
+  "version": "1.2.0",
+  "description": "MCP stdio bridge for Storyflo \u2014 curated audio-news + the public Declassified library (FBI/CIA/NSA/NASA/DOJ/AARO releases) for any LLM agent.",
   "type": "module",
   "main": "./src/index.js",
   "bin": {
