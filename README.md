@@ -2,6 +2,7 @@
 
 [![storyflo-mcp MCP server](https://glama.ai/mcp/servers/Alisammour/storyflo-mcp/badges/card.svg)](https://glama.ai/mcp/servers/Alisammour/storyflo-mcp)
 [![storyflo-mcp MCP server score](https://glama.ai/mcp/servers/Alisammour/storyflo-mcp/badges/score.svg)](https://glama.ai/mcp/servers/Alisammour/storyflo-mcp)
+[![smithery badge](https://smithery.ai/badge/ali-7ogs/storyflo)](https://smithery.ai/server/ali-7ogs/storyflo)
 
 Official Model Context Protocol server for [**Storyflo**](https://storyflo.com) — a curated audio-news platform that narrates trending articles + listener-forwarded newsletters and exposes them as a callable surface for any LLM agent.
 
