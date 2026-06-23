@@ -8,6 +8,17 @@ Official Model Context Protocol server for [**Storyflo**](https://storyflo.com) 
 
 This repository contains a zero-dependency **stdio bridge** (`src/index.js`) that relays MCP JSON-RPC between a local stdio client and the hosted streamable-http endpoint, plus discovery + install references. The Storyflo platform itself is proprietary; agent integration through the public API is the supported surface.
 
+## Install — one click
+
+[![Add to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=storyflo&config=eyJzdG9yeWZsbyI6eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vYXBpLnN0b3J5ZmxvLmNvbS9tY3AvdjEifX0=)
+[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_storyflo_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](vscode:mcp/install?%7B%22name%22%3A%20%22storyflo%22%2C%20%22type%22%3A%20%22http%22%2C%20%22url%22%3A%20%22https%3A//api.storyflo.com/mcp/v1%22%7D)
+[![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_storyflo_MCP-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](vscode-insiders:mcp/install?%7B%22name%22%3A%20%22storyflo%22%2C%20%22type%22%3A%20%22http%22%2C%20%22url%22%3A%20%22https%3A//api.storyflo.com/mcp/v1%22%7D)
+
+**Claude Code:** `claude mcp add --transport http storyflo https://api.storyflo.com/mcp/v1`
+**Any remote client:** `https://api.storyflo.com/mcp/v1` (streamable-http) · **stdio:** `npx storyflo-mcp`
+
+The best tools are **free + no-auth** — try `search_declassified` (real FBI/CIA/NSA/NASA cases) in seconds, then earn revenue share by integrating via `register_embedder`.
+
 ## Run the stdio bridge
 
 ```bash
