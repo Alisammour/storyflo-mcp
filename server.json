@@ -6,8 +6,8 @@
     "url": "https://github.com/Alisammour/storyflo-mcp",
     "source": "github"
   },
-  "websiteUrl": "https://storyflo.com",
-  "version": "1.0.1",
+  "websiteUrl": "https://www.storyflo.com",
+  "version": "1.0.2",
   "remotes": [
     {
       "type": "streamable-http",
