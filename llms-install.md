@@ -17,18 +17,33 @@ Add to your MCP client's config:
 }
 ```
 
-The first time the user invokes a Storyflo tool, the client will prompt for OAuth consent. Authentication happens via the user's browser at `https://storyflo.com/oauth/authorize` — no API keys or shared secrets to manage.
+Many tools are **public (no auth)** — Declassified, discovery, and partner tools work from a fresh install with no OAuth handshake. Tools that act on a listener's behalf (mint a feed, fetch premium audio) prompt for OAuth consent on first use, via the user's browser at `https://www.storyflo.com/oauth/authorize` — no API keys or shared secrets to manage.
 
-## Tools (8 total)
+> **Claude Desktop:** for a one-click `.mcpb` install, use the companion extension repo [Alisammour/storyflo-mcp-extension](https://github.com/Alisammour/storyflo-mcp-extension).
 
-**Free** (no payment beyond OAuth):
-- `search_articles` — search the curated article corpus by vertical
-- `get_article` — fetch the full record + body_text + audio_url
+## Tools (21 total)
+
+**Public** (no auth required):
+- `search_articles` — search the curated article corpus by query/vertical
+- `get_article` — fetch the full record + body_text + audio_url by slug
 - `get_audio_url` — resolve the playable audio URL for hand-off
-- `subscribe_topic` — mint or update the listener's personal podcast RSS feed
-- `list_subscriptions` — list feeds this agent has minted on the human's behalf
+- `get_trending_topics` — what's hot on Storyflo right now
+- `get_personas` — the host voices (Theo / Mason / Riley / Iris / Brock / Wit)
+- `get_vertical_landscape` — one-shot per-vertical context for onboarding a listener
+- `list_podcasts` — full catalog of audio shows (per-host + Declassified)
 - `digest` — aggregate top-N articles across verticals (heaviest read-only action)
-- `get_market_linked_stories` — Storyflo stories matched to actively traded Kalshi event contracts (a CFTC-regulated designated contract market). Each item carries qualitative signal tags (`active`, `high_velocity`, `genuine_uncertainty`) plus a link-out to Kalshi's own page where the live market data lives. Editorial sourcing surface — Storyflo never returns raw prices, probabilities, volumes, or open interest. Informational use only; not investment advice.
+- `get_market_linked_stories` — Storyflo stories matched to actively traded Kalshi event contracts (a CFTC-regulated designated contract market). Qualitative signal tags + a link-out to Kalshi; never raw prices/probabilities/volumes/OI. Informational only; not investment advice.
+- `get_crypto_market_link` — Kraken affiliate markets link-out for crypto-relevant stories (editorial linkout, not a trading recommendation)
+- `search_declassified` — substring search across the public Declassified case archive
+- `get_declassified_case` — full Declassified case record by slug
+- `digest_declassified` — most-recently-published Declassified cases over a window
+- `subscribe_topic` — mint or update the listener's personal podcast RSS feed
+- `subscribe_declassified_topic` — resolve a Declassified podcast-feed URL (read-only)
+- `list_subscriptions` — list feeds this agent has minted on the human's behalf
+- `register_embedder` — returns a partner onboarding URL (does NOT send email or create a row)
+- `get_embedder_manifest` — the embedder integration manifest
+- `get_embedder_network_manifest` — the embedder network manifest
+- `quote_partnership` — explore partnership tiers, creative formats + payout rails
 
 **Premium** (metered via x402 over USDC on Base mainnet):
 - `get_vertical_briefing` — stitched audio briefing of top-25 trending articles in a vertical from the last 24h
