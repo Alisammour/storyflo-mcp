@@ -4,7 +4,9 @@
 [![storyflo-mcp MCP server score](https://glama.ai/mcp/servers/Alisammour/storyflo-mcp/badges/score.svg)](https://glama.ai/mcp/servers/Alisammour/storyflo-mcp)
 [![smithery badge](https://smithery.ai/badge/ali-7ogs/storyflo)](https://smithery.ai/server/ali-7ogs/storyflo)
 
-Official Model Context Protocol server for [**Storyflo**](https://storyflo.com) — a curated audio-news platform that narrates trending articles + listener-forwarded newsletters and exposes them as a callable surface for any LLM agent.
+Official Model Context Protocol server for [**Storyflo**](https://www.storyflo.com) — curated audio news + daily briefings + the public Declassified library (FBI/CIA/NSA/NASA/DOJ/AARO releases) + market-linked story signals, all exposed as a callable surface for any LLM agent.
+
+> **Claude Desktop one-click `.mcpb`:** for a no-config Claude Desktop install, see the companion extension repo [**Alisammour/storyflo-mcp-extension**](https://github.com/Alisammour/storyflo-mcp-extension).
 
 This repository contains a zero-dependency **stdio bridge** (`src/index.js`) that relays MCP JSON-RPC between a local stdio client and the hosted streamable-http endpoint, plus discovery + install references. The Storyflo platform itself is proprietary; agent integration through the public API is the supported surface.
 
@@ -55,11 +57,13 @@ Claude Desktop / any stdio-only MCP client config:
 
 ## What you can do
 
-- Search Storyflo's article corpus by vertical (`tech`, `finance`, `science`, `media`, `sports`, `culture`, + 30 more)
-- Fetch full articles + audio URLs
-- Resolve playable audio (free tier) or premium-quality audio (Plus tier)
-- Subscribe topic feeds on the listener's behalf
-- Aggregate top-N daily briefings
+- **Audio news** — search Storyflo's curated corpus by vertical (`tech`, `finance`, `science`, `media`, `sports`, `culture`, + more), fetch full articles, and resolve playable audio
+- **Daily briefings** — aggregate top-N cross-vertical roll-ups (`digest`) or a stitched single-vertical audio briefing (`get_vertical_briefing`, premium)
+- **Declassified library** — narrated FBI/CIA/NSA/NASA/DOJ/AARO releases, public + no auth
+- **Market-linked signals** — Storyflo stories matched to Kalshi event contracts + a Kraken crypto markets link-out (editorial, not investment advice)
+- **Discovery** — trending topics, host personas, per-vertical landscape, full podcast catalog
+- **Subscriptions** — mint personal podcast feeds for articles or Declassified, on the listener's behalf
+- **Partner integration** — register as an embedder + explore partnership tiers/payout rails for revenue share
 
 ## Endpoints
 
@@ -69,7 +73,7 @@ Claude Desktop / any stdio-only MCP client config:
 | Discovery manifest | `https://api.storyflo.com/.well-known/mcp.json` |
 | OAuth (RFC 8414) | `https://api.storyflo.com/.well-known/oauth-authorization-server` |
 | OpenAI tool spec | `https://api.storyflo.com/v1/agents/openai-tools.json` |
-| API docs | `https://storyflo.com/developers` |
+| API docs | `https://www.storyflo.com/developers` |
 
 ## One-click install
 
@@ -104,18 +108,43 @@ https://api.storyflo.com/mcp/v1
 
 ## Tools
 
-Storyflo exposes **13 tools** across three auth tiers:
+Storyflo exposes **21 tools** (20 free + 1 premium) across three auth tiers:
 
-- **Public (no auth, no OAuth flow needed)** — the 4 `*_declassified*` tools below. Designed so any LLM agent can browse + recommend the Declassified library from a fresh client install without an OAuth handshake.
-- **OAuth free tier** — `search_articles`, `get_article`, `get_audio_url`, `subscribe_topic`, `list_subscriptions`, `digest`, `get_market_linked_stories`, `get_crypto_market_link`.
-- **Premium (x402 over USDC on Base mainnet)** — `get_vertical_briefing`.
+**Public (no auth, no OAuth flow needed)** — designed so any LLM agent can browse + recommend from a fresh client install without an OAuth handshake:
+
+| tool | what it does |
+|---|---|
+| `search_articles` | search the curated article corpus by query/vertical |
+| `get_article` | fetch the full record + body text + audio URL by slug |
+| `get_audio_url` | resolve the playable audio URL for an article |
+| `get_trending_topics` | what's hot on Storyflo right now |
+| `get_personas` | the host voices (Theo / Mason / Riley / Iris / Brock / Wit) |
+| `get_vertical_landscape` | one-shot per-vertical context for onboarding a listener |
+| `list_podcasts` | the full catalog of audio shows (per-host + Declassified) |
+| `digest` | top-N articles aggregated across verticals for a window |
+| `get_market_linked_stories` | stories matched to Kalshi event contracts (editorial, not advice) |
+| `get_crypto_market_link` | Kraken affiliate markets link-out for crypto-relevant stories |
+| `search_declassified` | substring search across the Declassified case archive |
+| `get_declassified_case` | full Declassified case record by slug |
+| `digest_declassified` | most-recently-published Declassified cases over a window |
+| `subscribe_topic` | mint/update a personal podcast RSS feed scoped to verticals |
+| `subscribe_declassified_topic` | resolve a Declassified podcast-feed URL (read-only) |
+| `list_subscriptions` | list feeds this agent has minted for the human |
+| `register_embedder` | returns a partner onboarding URL (no email/row created) |
+| `get_embedder_manifest` | the embedder integration manifest |
+| `get_embedder_network_manifest` | the embedder network manifest |
+| `quote_partnership` | explore partnership tiers, creative formats + payout rails |
+
+> Note: `subscribe_topic`, `subscribe_declassified_topic`, and `list_subscriptions` are listed as public for discovery; calls that mint/list a listener's feed resolve identity via OAuth bearer when present.
+
+**Premium (x402 over USDC on Base mainnet)** — `get_vertical_briefing`: a stitched audio briefing of the top-25 trending articles in a vertical from the last 24h.
 
 The live tool manifest (with full JSON Schema for every parameter) is at
 [`/v1/agents/openai-tools.json`](https://api.storyflo.com/v1/agents/openai-tools.json) — the source of truth Glama, OpenAI, and Anthropic introspect.
 
 ### Declassified library · public · no auth (NEW, 2026-06-20)
 
-The Declassified library is Storyflo's narrated archive of publicly-released government documents from FBI, CIA, NSA, NASA, DOJ, AARO, war.gov, and other agencies. Every case has a narrated audio version, a transcript excerpt, and a source-document link. The 4 tools below traverse the same archive that backs the [`/declassified`](https://storyflo.com/declassified) FE shelf and the public [Declassified RSS feed](https://api.storyflo.com/v1/podcasts/storyflo-declassified.xml).
+The Declassified library is Storyflo's narrated archive of publicly-released government documents from FBI, CIA, NSA, NASA, DOJ, AARO, war.gov, and other agencies. Every case has a narrated audio version, a transcript excerpt, and a source-document link. The 4 tools below traverse the same archive that backs the [`/declassified`](https://www.storyflo.com/declassified) FE shelf and the public [Declassified RSS feed](https://api.storyflo.com/v1/podcasts/storyflo-declassified.xml).
 
 #### `search_declassified` · public
 Substring search across case title + synopsis. Returns `{slug, title, dek, episode_date, duration_sec, agency, category, era, audio_url}` per match.
@@ -274,7 +303,7 @@ OAuth 2.1 + PKCE. Public clients (Claude/ChatGPT/Cursor's MCP connectors) auto-r
 
 ## x402 micropayments
 
-The premium tool (`get_vertical_briefing`) is metered via **x402 over USDC on Base mainnet**. Agents pay per call, no upfront contract. All other tools (`search_articles`, `get_article`, `get_audio_url`, `subscribe_topic`, `list_subscriptions`, `digest`, `get_market_linked_stories`) require no payment beyond OAuth.
+The premium tool (`get_vertical_briefing`) is metered via **x402 over USDC on Base mainnet**. Agents pay per call, no upfront contract. All 20 other tools require no payment — the Declassified, discovery, and partner tools need no auth at all, and the listener/article tools require only OAuth.
 
 70/20/10 revenue split: **70% to the publisher**, **20% to the recommending agent**, **10% to Storyflo**. On-chain and deterministic.
 
@@ -296,7 +325,7 @@ npx -y @smithery/cli install storyflo
 ## Logo
 
 The Storyflo brand mark for client UIs:
-[`https://storyflo.com/icon-512.png`](https://storyflo.com/icon-512.png)
+[`https://www.storyflo.com/icon-512.png`](https://www.storyflo.com/icon-512.png)
 
 ## Related MCP servers
 

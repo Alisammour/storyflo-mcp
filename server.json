@@ -1,13 +1,14 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.Alisammour/storyflo-mcp",
-  "description": "Audio-news + Declassified MCP that pays your agent — free no-auth tools, revenue share.",
+  "title": "Storyflo",
+  "description": "Storyflo MCP — curated audio-news, daily briefings, the public Declassified library (FBI/CIA/NSA/NASA/DOJ/AARO releases), and market-linked story signals. 20 free no-auth/OAuth tools + 1 premium x402 tool that pays your agent revenue share.",
   "repository": {
     "url": "https://github.com/Alisammour/storyflo-mcp",
     "source": "github"
   },
-  "websiteUrl": "https://storyflo.com",
-  "version": "1.0.1",
+  "websiteUrl": "https://www.storyflo.com",
+  "version": "1.2.0",
   "remotes": [
     {
       "type": "streamable-http",
