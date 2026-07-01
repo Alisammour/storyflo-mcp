@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.Alisammour/storyflo-mcp",
   "title": "Storyflo",
-  "description": "Storyflo MCP — curated audio-news, daily briefings, the public Declassified library (FBI/CIA/NSA/NASA/DOJ/AARO releases), and market-linked story signals. 20 free no-auth/OAuth tools + 1 premium x402 tool that pays your agent revenue share.",
+  "description": "Curated audio news, daily briefings, the Declassified library + market-linked signals.",
   "repository": {
     "url": "https://github.com/Alisammour/storyflo-mcp",
     "source": "github"
